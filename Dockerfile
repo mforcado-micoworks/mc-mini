@@ -7,4 +7,4 @@ WORKDIR /usr/src/app
 COPY . .
 RUN pnpm install --frozen-lockfile && \
     pnpm build
-CMD ["pnpm", "start:prod:nestjs-kafka"]
+CMD ["pnpm", "start:prod"]
