@@ -1,34 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { LineWebhookService } from './line-webhook.service';
-import { CreateLineWebhookDto } from './dto/create-line-webhook.dto';
-import { UpdateLineWebhookDto } from './dto/update-line-webhook.dto';
+import { WebhookRequestBody } from '@line/bot-sdk';
+import {
+  Body,
+  Controller,
+  Headers,
+  HttpCode,
+  Post,
+  Query,
+} from '@nestjs/common';
 
-@Controller('line-webhook')
+@Controller('webhooks/line')
 export class LineWebhookController {
-  constructor(private readonly lineWebhookService: LineWebhookService) {}
-
   @Post()
-  create(@Body() createLineWebhookDto: CreateLineWebhookDto) {
-    return this.lineWebhookService.create(createLineWebhookDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.lineWebhookService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.lineWebhookService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLineWebhookDto: UpdateLineWebhookDto) {
-    return this.lineWebhookService.update(+id, updateLineWebhookDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.lineWebhookService.remove(+id);
+  @HttpCode(200)
+  handleEvents(
+    @Headers('x-line-signature') xLineSignature: string,
+    @Body() body: WebhookRequestBody,
+    @Query('siteUuid') siteUuid: string,
+  ) {
+    console.log(xLineSignature);
+    console.log(body);
+    console.log(siteUuid);
   }
 }
