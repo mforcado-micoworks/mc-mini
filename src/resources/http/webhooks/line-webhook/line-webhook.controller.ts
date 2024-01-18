@@ -7,9 +7,12 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { LineWebhookService } from './line-webhook.service';
 
 @Controller('webhooks/line')
 export class LineWebhookController {
+  constructor(private readonly lineWebhookService: LineWebhookService) {}
+
   @Post()
   @HttpCode(200)
   handleEvents(
@@ -17,8 +20,11 @@ export class LineWebhookController {
     @Body() body: WebhookRequestBody,
     @Query('siteUuid') siteUuid: string,
   ) {
-    console.log(xLineSignature);
-    console.log(body);
-    console.log(siteUuid);
+    this.lineWebhookService.publish({
+      xLineSignature,
+      body,
+      siteUuid,
+      from: 'line webhook',
+    });
   }
 }
